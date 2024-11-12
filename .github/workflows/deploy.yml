@@ -1,0 +1,50 @@
+name: Deploy to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main  # Deploys when pushing to the main branch; adjust if using a different branch.
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+        service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+
+    - name: Configure Docker to use gcloud as a credential helper
+      run: |
+        gcloud auth configure-docker
+
+    - name: Build and push frontend Docker image
+      run: |
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/react-frontend ./frontend
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/react-frontend
+
+    - name: Deploy frontend to Cloud Run
+      run: |
+        gcloud run deploy react-frontend \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/react-frontend \
+          --region europe-north1 \
+          --platform managed \
+          --allow-unauthenticated
+
+    - name: Build and push backend Docker image
+      run: |
+        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-backend ./backend
+        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-backend
+
+    - name: Deploy backend to Cloud Run
+      run: |
+        gcloud run deploy node-backend \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-backend \
+          --region europe-north1 \
+          --platform managed \
+          --allow-unauthenticated
