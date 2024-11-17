@@ -1,7 +1,15 @@
-FROM node:16
+FROM node:22
+
+# Set working directory
 WORKDIR /app
-COPY package.json ./
-RUN npm install
+
+# Copy package.json and install dependencies
+COPY package*.json ./
+RUN npm install -g npm@latest
+
+# Copy source code
 COPY . .
-EXPOSE 5000
-CMD ["node", "index.js"]
+
+# Expose port and start the app
+EXPOSE 3000
+CMD ["npm", "start"]
