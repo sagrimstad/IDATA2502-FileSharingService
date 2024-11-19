@@ -1,11 +1,13 @@
-FROM node:22
+FROM node:18
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
-RUN npm install -g npm@latest
+
+# Install dependencies
+RUN npm install
 
 # Copy source code
 COPY . .
