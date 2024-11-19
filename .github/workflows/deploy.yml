@@ -25,26 +25,28 @@ jobs:
 
     - name: Build and push frontend Docker image
       run: |
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/react-frontend ./frontend
-        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/react-frontend
+        docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-docker-repo/react-frontend ./frontend
+        docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-docker-repo/react-frontend
 
     - name: Deploy frontend to Cloud Run
       run: |
         gcloud run deploy react-frontend \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/react-frontend \
-          --region europe-north1 \
-          --platform managed \
-          --allow-unauthenticated
+        --image europe-west1-docker.pkg.dev/idata2502-cloudproject/eu-docker-repo/react-frontend \
+        --region europe-west1 \
+        --platform managed \
+        --allow-unauthenticated
+
 
     - name: Build and push backend Docker image
       run: |
-        docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-backend ./backend
-        docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-backend
+        docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-docker-repo/node-backend ./backend
+        docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-docker-repo/node-backend
+
 
     - name: Deploy backend to Cloud Run
       run: |
         gcloud run deploy node-backend \
-          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/node-backend \
-          --region europe-north1 \
-          --platform managed \
-          --allow-unauthenticated
+        --image europe-west1-docker.pkg.dev/idata2502-cloudproject/eu-docker-repo/node-backend \
+        --region europe-west1 \
+        --platform managed \
+        --allow-unauthenticated \
