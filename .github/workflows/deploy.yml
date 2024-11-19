@@ -19,34 +19,33 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-    - name: Configure Docker to use gcloud as a credential helper
+    - name: Configure Docker for Artifact Registry
       run: |
-        gcloud auth configure-docker
+        gcloud auth configure-docker europe-north1-docker.pkg.dev
 
     - name: Build and push frontend Docker image
       run: |
-        docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-docker-repo/react-frontend ./frontend
-        docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-docker-repo/react-frontend
+        docker build -t europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-north1-docker-repo/react-frontend ./frontend
+        docker push europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-north1-docker-repo/react-frontend
 
     - name: Deploy frontend to Cloud Run
       run: |
         gcloud run deploy react-frontend \
-        --image europe-west1-docker.pkg.dev/idata2502-cloudproject/eu-docker-repo/react-frontend \
-        --region europe-west1 \
-        --platform managed \
-        --allow-unauthenticated
-
+          --image europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-north1-docker-repo/react-frontend \
+          --region europe-north1 \
+          --platform managed \
+          --allow-unauthenticated
 
     - name: Build and push backend Docker image
       run: |
-        docker build -t europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-docker-repo/node-backend ./backend
-        docker push europe-west1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-docker-repo/node-backend
-
+        docker build -t europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-north1-docker-repo/node-backend ./backend
+        docker push europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-north1-docker-repo/node-backend
 
     - name: Deploy backend to Cloud Run
       run: |
         gcloud run deploy node-backend \
-        --image europe-west1-docker.pkg.dev/idata2502-cloudproject/eu-docker-repo/node-backend \
-        --region europe-west1 \
-        --platform managed \
-        --allow-unauthenticated \
+          --image europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-north1-docker-repo/node-backend \
+          --region europe-north1 \
+          --platform managed \
+          --allow-unauthenticated \
+          --set-env-vars PORT=3000
