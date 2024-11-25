@@ -1,22 +1,37 @@
 const express = require("express");
 const multer = require("multer");
 const { Storage } = require("@google-cloud/storage");
+const path = require('path');
 
 const app = express();
-const upload = multer({ storage: multer.memoryStorage() });
+const PORT = process.env.PORT || 3000;
 
-// Initialize Google Cloud Storage with your project ID
+
+// Google Cloud Storage configuration
 const storage = new Storage({ projectId: "idata2502-cloudproject" });
-const bucket = storage.bucket("file-sharing-service");
+const bucketName = 'file-sharing-service'
+const bucket = storage.bucket(bucketName);
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Route to handle file uploads
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
+    if (!register.file) {
+      return res.status(400).json({error: 'No file uploaded'});
+    }
+    
     const blob = bucket.file(req.file.originalname);
     const blobStream = blob.createWriteStream();
 
     blobStream.on("error", (err) => res.status(500).send({ error: err.message }));
-    blobStream.on("finish", () => res.status(200).send({ fileName: req.file.originalname }));
+
+    blobStream.on("finish", () => {
+      const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+      res.status(200).json({ message: 'File uploaded successfully', url: publicUrl});
+    });
+      
+      
 
     blobStream.end(req.file.buffer);
   } catch (error) {
@@ -28,14 +43,14 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 app.get("/files", async (req, res) => {
   try {
     const [files] = await bucket.getFiles();
-    res.status(200).send(files.map(file => ({
+    const fileData = files.map((file) => ({
       name: file.name,
-      url: `https://storage.googleapis.com/${bucket.name}/${file.name}`
-    })));
+      url: `https://storage.googleapis.com/${bucketName}/${blob.name}`
+    }));
+    res.status(200).json(fileData);
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
 });
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
