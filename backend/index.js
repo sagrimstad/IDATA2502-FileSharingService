@@ -35,8 +35,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       res.status(200).json({ message: 'File uploaded successfully', url: publicUrl});
     });
       
-      
-
     blobStream.end(req.file.buffer);
   } catch (error) {
     res.status(500).send({ error: error.message });
@@ -49,7 +47,7 @@ app.get("/files", async (req, res) => {
     const [files] = await bucket.getFiles();
     const fileData = files.map((file) => ({
       name: file.name,
-      url: `https://storage.googleapis.com/${bucketName}/${blob.name}`
+      url: `https://storage.googleapis.com/${bucketName}/${file.name}`
     }));
     res.status(200).json(fileData);
   } catch (error) {
