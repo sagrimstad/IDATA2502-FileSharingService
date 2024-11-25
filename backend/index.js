@@ -22,8 +22,11 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
+      console.error("No file uploaded in the request.");
       return res.status(400).json({ error: "No file uploaded" });
     }
+
+    console.log("File received:", req.file);
 
     const blob = bucket.file(req.file.originalname);
     const blobStream = blob.createWriteStream({
@@ -32,15 +35,20 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       predefinedAcl: "publicRead",
     });
 
-    blobStream.on("error", (err) => res.status(500).send({ error: err.message }));
+    blobStream.on("error", (err) => {
+      console.error("Error during file upload:", err);
+      res.status(500).send({ error: err.message });
+    });
 
     blobStream.on("finish", () => {
       const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
+      console.log("File uploaded successfully:", publicUrl);
       res.status(200).json({ message: "File uploaded successfully", url: publicUrl });
     });
 
     blobStream.end(req.file.buffer);
   } catch (error) {
+    console.error("Unexpected error in /upload route:", error);
     res.status(500).send({ error: error.message });
   }
 });
