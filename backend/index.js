@@ -1,10 +1,12 @@
 const express = require("express");
+const cors = require("cors");
 const multer = require("multer");
 const { Storage } = require("@google-cloud/storage");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Enable CORS for all origins or specific frontend origin
 app.use(cors({
   origin: "https://react-frontend-104390666503.europe-north1.run.app" // Allow your React frontend origin
 }));
@@ -48,8 +50,8 @@ app.get("/files", async (req, res) => {
   try {
     const [files] = await bucket.getFiles();
     const fileData = files.map((file) => ({
-      name: file.name, // File name matches the key in your bucket
-      url: `https://storage.googleapis.com/${bucketName}/${file.name}`, // Generate public URL
+      name: file.name,
+      url: `https://storage.googleapis.com/${bucketName}/${file.name}`,
     }));
     res.status(200).json(fileData);
   } catch (error) {
