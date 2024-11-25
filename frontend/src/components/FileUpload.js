@@ -26,7 +26,7 @@ const FileUpload = () => {
             setMessage("File uploaded successfully");
             console.log("File uploaded successfully:", response.data);
         } catch (error) {
-            console.error("Error uploading file:", error);
+            console.error("Error uploading file:", error.response || error);
             setMessage("Failed to upload file.");
         }
     };
