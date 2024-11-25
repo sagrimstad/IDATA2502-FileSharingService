@@ -17,12 +17,16 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Route to handle file uploads
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    if (!register.file) {
+    if (!req.file) {
       return res.status(400).json({error: 'No file uploaded'});
     }
     
     const blob = bucket.file(req.file.originalname);
-    const blobStream = blob.createWriteStream();
+    const blobStream = blob.createWriteStream({
+      resumable: false,
+      contentType: req.file.originalname,
+      predefinedAcl: 'publicRead',
+    });
 
     blobStream.on("error", (err) => res.status(500).send({ error: err.message }));
 
