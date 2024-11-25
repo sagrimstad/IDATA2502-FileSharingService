@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './styles/FileList.css';
 
 const FileList = () => {
     const [files, setFiles] = useState([]);
@@ -25,7 +26,7 @@ const FileList = () => {
     }, []);
 
     return (
-        <div>
+        <div className='file-list'>
             <h3>Uploaded Files</h3>
             {error && <p className='Error'>{error}</p>}
             <ul>
