@@ -23,6 +23,20 @@
     background-color: #f8f9fa;
 }
 
+.file-list li button {
+    margin-left: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.file-list li button:hover {
+    background-color: #c82333;
+  }
+
 .file-list li a {
     text-decoration: none;
     color: #007bff;

@@ -66,4 +66,19 @@ app.get("/files", async (req, res) => {
   }
 });
 
+// Delete file from bucket
+app.delete("/delete/:filename", async (req, res) => {
+  const filename = req.params.filename;
+
+  try {
+    const file = bucket.file(filename);
+    await file.delete();
+    console.log(`File ${filename} deleted successfully`);
+    res.status(200).json({ message: `File ${filename} deleted successfully`});
+  } catch (error) {
+    console.error(`Error deleting file ${filename}:`, error);
+    res.status(500).json({ error: `Failed to delete file: ${error.message}` });
+  }
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

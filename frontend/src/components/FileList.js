@@ -25,6 +25,17 @@ const FileList = () => {
         fetchFiles();
     }, []);
 
+    const handleDelete = async (filename) => {
+        try {
+            await axios.delete(`${process.env.REACT_APP_BACKEND_URL}/delete/${filename}`);
+            setFiles((prevFiles) => prevFiles.filter((file) => file.name !== filename));
+            console.log(`File ${filename} deleted successfully`);
+        } catch (error) {
+            console.error(`Error deleting file ${filename}:`, error);
+            setError(`Failed to delete file: ${filename}`);
+        }
+    }
+
     return (
         <div className='file-list'>
             <h3>Uploaded Files</h3>
@@ -33,7 +44,10 @@ const FileList = () => {
                 {files.length > 0 ? (
                     files.map((file) => (
                         <li key={file.name}>
-                            <a href={file.url} target="_blank" rel="noopener noreferrer">{file.name}</a>
+                            <a href={file.url} target="_blank" rel="noopener noreferrer">
+                                {file.name}
+                            </a>
+                            <button onClick={() => handleDelete(file.name)}>Delete</button>
                         </li>
                     ))
                 ) : (
