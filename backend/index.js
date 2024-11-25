@@ -22,7 +22,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 app.post("/upload", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
-      console.error("No file uploaded in the request.");
+      console.error("No file uploaded. Request body:", req.body);
       return res.status(400).json({ error: "No file uploaded" });
     }
 
@@ -31,18 +31,18 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     const blob = bucket.file(req.file.originalname);
     const blobStream = blob.createWriteStream({
       resumable: false,
-      contentType: req.file.mimetype,
+      contentType: req.file.mimetype || "application/octet-stream",
       predefinedAcl: "publicRead",
     });
 
     blobStream.on("error", (err) => {
-      console.error("Error during file upload:", err);
+      console.error("Error during file stream:", err.message);
       res.status(500).send({ error: err.message });
     });
 
     blobStream.on("finish", () => {
       const publicUrl = `https://storage.googleapis.com/${bucketName}/${blob.name}`;
-      console.log("File uploaded successfully:", publicUrl);
+      console.log("File successfully uploaded:", publicUrl);
       res.status(200).json({ message: "File uploaded successfully", url: publicUrl });
     });
 
