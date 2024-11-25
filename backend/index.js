@@ -5,6 +5,10 @@ const { Storage } = require("@google-cloud/storage");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors({
+  origin: "https://react-frontend-104390666503.europe-north1.run.app" // Allow your React frontend origin
+}));
+
 // Google Cloud Storage configuration
 const storage = new Storage({ projectId: "idata2502-cloudproject" });
 const bucketName = "file-sharing-service";
