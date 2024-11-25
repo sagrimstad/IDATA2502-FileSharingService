@@ -51,4 +51,5 @@ jobs:
           --image europe-north1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/eu-north1-docker-repo/node-backend \
           --region europe-north1 \
           --platform managed \
+          --service-account=cloud-run-service-account@idata2502-cloudproject.iam.gserviceaccount.com \
           --allow-unauthenticated \
