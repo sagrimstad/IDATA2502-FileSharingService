@@ -32,7 +32,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     const blobStream = blob.createWriteStream({
       resumable: false,
       contentType: req.file.mimetype || "application/octet-stream",
-      predefinedAcl: "publicRead",
     });
 
     blobStream.on("error", (err) => {
