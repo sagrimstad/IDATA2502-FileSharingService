@@ -16,7 +16,7 @@ const FileUpload = () => {
             setMessage("Please select a file to upload");
             return;
         }
-        
+
         const formData = new FormData();
         formData.append("file", file);
 
@@ -34,8 +34,19 @@ const FileUpload = () => {
 
     return (
         <div className='file-upload'>
-            <input type="file" onChange={handleFileChange} />
-            <button onClick={handleUpload}>Upload File</button>
+            <div className="file-input-container">
+                <label className="file-label">
+                    <input type="file" onChange={handleFileChange} />Choose File
+                </label>
+                <span className="file-name">{file ? file.name : "No file chosen"}</span>
+            </div>
+            <button
+                onClick={handleUpload}
+                disabled={!file}
+                className={!file ? 'disabled' : ''}
+            >
+                Upload File
+            </button>
             {message && <p>{message}</p>}
         </div>
     );
