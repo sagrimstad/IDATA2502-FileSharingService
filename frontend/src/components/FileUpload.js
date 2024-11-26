@@ -5,10 +5,12 @@ import './styles/FileUpload.css';
 const FileUpload = () => {
     const [file, setFile] = useState(null);
     const [message, setMessage] = useState("");
+    const [uploadProgress, setUploadProgress] = useState(0);
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
         setMessage("");
+        setUploadProgress(0);
     };
 
     const handleUpload = async () => {
@@ -23,6 +25,10 @@ const FileUpload = () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/upload`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
+                onDownloadProgress: (progressEvent) => {
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                    setUploadProgress(percentCompleted);
+                }
             });
             setMessage("File uploaded successfully");
             console.log("File uploaded successfully:", response.data);
@@ -47,6 +53,13 @@ const FileUpload = () => {
             >
                 Upload File
             </button>
+            {uploadProgress > 0 && (
+                <div className='progress-bar'>
+                    <div className='progress' style={{ width: `${uploadProgress}` }}>
+                        {uploadProgress}%
+                    </div>
+                </div>
+            )}
             {message && <p>{message}</p>}
         </div>
     );
