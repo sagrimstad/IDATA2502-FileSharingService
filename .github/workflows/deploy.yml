@@ -20,12 +20,13 @@ jobs:
       working-directory: ./backend
       run: npm install
 
+    - name: Run Unit Tests
+      working-directory: ./backend
+      run: npm test
+
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm install
-    
-    - name: Run Unit Tests
-      run: npm test
 
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v1
