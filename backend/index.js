@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
@@ -6,12 +5,12 @@ const { Storage } = require("@google-cloud/storage");
 
 const app = express();
 
-app.use(cors({ origin: process.env.REACT_FRONTEND_ORIGIN }));
+app.use(cors({ origin: "https://react-frontend-104390666503.europe-north1.run.app" }));
 const upload = multer({ storage: multer.memoryStorage() });
 
 // Google Cloud Storage configuration
-const storage = new Storage({ projectId: process.env.PROJECT_ID });
-const bucketName = process.env.BUCKET_NAME || "test-bucket";
+const storage = new Storage({ projectId: "idata2502-cloudproject" });
+const bucketName = "file-sharing-service" || "test-bucket";
 const bucket = storage.bucket(bucketName);
 
 
