@@ -8,12 +8,12 @@ const PORT = process.env.PORT || 3000;
 
 // Enable CORS for all origins or specific frontend origin
 app.use(cors({
-  origin: "https://react-frontend-104390666503.europe-north1.run.app" // Allow your React frontend origin
+  origin: process.env.REACT_FRONTEND_ORIGIN,
 }));
 
 // Google Cloud Storage configuration
-const storage = new Storage({ projectId: "idata2502-cloudproject" });
-const bucketName = "file-sharing-service";
+const storage = new Storage({ projectId: process.env.PROJECT_ID });
+const bucketName = process.env.BUCKET_NAME;
 const bucket = storage.bucket(bucketName);
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -74,7 +74,7 @@ app.delete("/delete/:filename", async (req, res) => {
     const file = bucket.file(filename);
     await file.delete();
     console.log(`File ${filename} deleted successfully`);
-    res.status(200).json({ message: `File ${filename} deleted successfully`});
+    res.status(200).json({ message: `File ${filename} deleted successfully` });
   } catch (error) {
     console.error(`Error deleting file ${filename}:`, error);
     res.status(500).json({ error: `Failed to delete file: ${error.message}` });
