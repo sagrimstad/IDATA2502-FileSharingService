@@ -6,12 +6,21 @@ on:
       - main  # Deploys when pushing to the main branch; adjust if using a different branch.
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+    
+    - name: Set iup Node.js
+      uses: actions/setup-node@v3
+    
+    - name: Install Dependencies
+      run: npm install
+    
+    - name: Run Unit Tests
+      run: npm test
 
     - name: Authenticate with Google Cloud
       uses: google-github-actions/auth@v1
