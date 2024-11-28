@@ -83,3 +83,38 @@
     font-size: 0.9rem;
     transition: width 0.2s ease-in-out;
 }
+
+.sort-options {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sort-options label {
+    font-size: 1rem;
+    color: #495057;
+}
+
+.sort-options select {
+    padding: 5px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.uploaded-files {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.uploaded-files li {
+    padding: 10px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
