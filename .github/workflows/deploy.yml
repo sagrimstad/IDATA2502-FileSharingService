@@ -16,7 +16,12 @@ jobs:
     - name: Set iup Node.js
       uses: actions/setup-node@v3
     
-    - name: Install Dependencies
+    - name: Install Backend Dependencies
+      working-directory: ./backend
+      run: npm install
+
+    - name: Install Frontend Dependencies
+      working-directory: ./frontend
       run: npm install
     
     - name: Run Unit Tests
