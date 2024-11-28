@@ -10,7 +10,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // Google Cloud Storage configuration
 const storage = new Storage({ projectId: "idata2502-cloudproject" });
-const bucketName = "file-sharing-service" || "test-bucket";
+const bucketName = "file-sharing-service";
 const bucket = storage.bucket(bucketName);
 
 
